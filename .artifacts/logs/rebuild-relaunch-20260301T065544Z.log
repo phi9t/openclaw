@@ -1,0 +1,160 @@
+# rebuild + relaunch
+2026-03-01T06:55:44Z
+$ cargo run --manifest-path crates/clawyer/Cargo.toml -- -D /home/phi9t/workspace/openclaw rebuild
+warning: function `get_config_dir` is never used
+  --> src/config.rs:27:8
+   |
+27 | pub fn get_config_dir(openclaw_dir: &Path) -> Result<PathBuf> {
+   |        ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `get_workspace_dir` is never used
+  --> src/config.rs:47:8
+   |
+47 | pub fn get_workspace_dir(openclaw_dir: &Path) -> Result<PathBuf> {
+   |        ^^^^^^^^^^^^^^^^^
+
+warning: function `trim_quotes` is never used
+ --> src/token.rs:4:12
+  |
+4 |     pub fn trim_quotes(token: &str) -> String {
+  |            ^^^^^^^^^^^
+
+warning: function `is_valid` is never used
+ --> src/token.rs:9:12
+  |
+9 |     pub fn is_valid(token: &str) -> bool {
+  |            ^^^^^^^^
+
+warning: `clawyer` (bin "clawyer") generated 4 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.56s
+     Running `crates/clawyer/target/debug/clawyer -D /home/phi9t/workspace/openclaw rebuild`
+time="2026-03-01T06:55:44Z" level=warning msg="The \"CLAUDE_AI_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:44Z" level=warning msg="The \"CLAUDE_WEB_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:44Z" level=warning msg="The \"CLAUDE_WEB_COOKIE\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:44Z" level=warning msg="The \"CLAUDE_AI_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:44Z" level=warning msg="The \"CLAUDE_WEB_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:44Z" level=warning msg="The \"CLAUDE_WEB_COOKIE\" variable is not set. Defaulting to a blank string."
+✅ Rebuilt image
+$ cargo run --manifest-path crates/clawyer/Cargo.toml -- -D /home/phi9t/workspace/openclaw restart
+warning: function `get_config_dir` is never used
+  --> src/config.rs:27:8
+   |
+27 | pub fn get_config_dir(openclaw_dir: &Path) -> Result<PathBuf> {
+   |        ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `get_workspace_dir` is never used
+  --> src/config.rs:47:8
+   |
+47 | pub fn get_workspace_dir(openclaw_dir: &Path) -> Result<PathBuf> {
+   |        ^^^^^^^^^^^^^^^^^
+
+warning: function `trim_quotes` is never used
+ --> src/token.rs:4:12
+  |
+4 |     pub fn trim_quotes(token: &str) -> String {
+  |            ^^^^^^^^^^^
+
+warning: function `is_valid` is never used
+ --> src/token.rs:9:12
+  |
+9 |     pub fn is_valid(token: &str) -> bool {
+  |            ^^^^^^^^
+
+warning: `clawyer` (bin "clawyer") generated 4 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running `crates/clawyer/target/debug/clawyer -D /home/phi9t/workspace/openclaw restart`
+time="2026-03-01T06:55:44Z" level=warning msg="The \"CLAUDE_WEB_COOKIE\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:44Z" level=warning msg="The \"CLAUDE_AI_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:44Z" level=warning msg="The \"CLAUDE_WEB_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:44Z" level=warning msg="The \"CLAUDE_AI_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:44Z" level=warning msg="The \"CLAUDE_WEB_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:44Z" level=warning msg="The \"CLAUDE_WEB_COOKIE\" variable is not set. Defaulting to a blank string."
+ Container openclaw-openclaw-gateway-1  Restarting
+ Container openclaw-openclaw-gateway-1  Started
+✅ Restarted gateway
+$ cargo run --manifest-path crates/clawyer/Cargo.toml -- -D /home/phi9t/workspace/openclaw status
+warning: function `get_config_dir` is never used
+  --> src/config.rs:27:8
+   |
+27 | pub fn get_config_dir(openclaw_dir: &Path) -> Result<PathBuf> {
+   |        ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `get_workspace_dir` is never used
+  --> src/config.rs:47:8
+   |
+47 | pub fn get_workspace_dir(openclaw_dir: &Path) -> Result<PathBuf> {
+   |        ^^^^^^^^^^^^^^^^^
+
+warning: function `trim_quotes` is never used
+ --> src/token.rs:4:12
+  |
+4 |     pub fn trim_quotes(token: &str) -> String {
+  |            ^^^^^^^^^^^
+
+warning: function `is_valid` is never used
+ --> src/token.rs:9:12
+  |
+9 |     pub fn is_valid(token: &str) -> bool {
+  |            ^^^^^^^^
+
+warning: `clawyer` (bin "clawyer") generated 4 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running `crates/clawyer/target/debug/clawyer -D /home/phi9t/workspace/openclaw status`
+NAME                            IMAGE                                                                     COMMAND                  SERVICE              CREATED          STATUS                  PORTS
+openclaw-openclaw-gateway-1     sha256:63ca2aba5bcb03ad5daf82586cf072edcd2c553f9ab47682796e0939f9adae9a   "docker-entrypoint.s…"   openclaw-gateway     45 minutes ago   Up Less than a second   
+openclaw-openclaw-tailscale-1   debian:bookworm-slim                                                      "bash -c 'apt-get up…"   openclaw-tailscale   6 days ago       Up 6 days               
+time="2026-03-01T06:55:47Z" level=warning msg="The \"CLAUDE_AI_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:47Z" level=warning msg="The \"CLAUDE_WEB_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:47Z" level=warning msg="The \"CLAUDE_WEB_COOKIE\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:47Z" level=warning msg="The \"CLAUDE_AI_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:47Z" level=warning msg="The \"CLAUDE_WEB_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:47Z" level=warning msg="The \"CLAUDE_WEB_COOKIE\" variable is not set. Defaulting to a blank string."
+$ cargo run --manifest-path crates/clawyer/Cargo.toml -- -D /home/phi9t/workspace/openclaw health
+warning: function `get_config_dir` is never used
+  --> src/config.rs:27:8
+   |
+27 | pub fn get_config_dir(openclaw_dir: &Path) -> Result<PathBuf> {
+   |        ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `get_workspace_dir` is never used
+  --> src/config.rs:47:8
+   |
+47 | pub fn get_workspace_dir(openclaw_dir: &Path) -> Result<PathBuf> {
+   |        ^^^^^^^^^^^^^^^^^
+
+warning: function `trim_quotes` is never used
+ --> src/token.rs:4:12
+  |
+4 |     pub fn trim_quotes(token: &str) -> String {
+  |            ^^^^^^^^^^^
+
+warning: function `is_valid` is never used
+ --> src/token.rs:9:12
+  |
+9 |     pub fn is_valid(token: &str) -> bool {
+  |            ^^^^^^^^
+
+warning: `clawyer` (bin "clawyer") generated 4 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running `crates/clawyer/target/debug/clawyer -D /home/phi9t/workspace/openclaw health`
+Discord: ok (@openclaw) (851ms)
+Agents: main (default)
+Heartbeat interval: 30m (main)
+Session store (main): /home/node/.openclaw/agents/main/sessions/sessions.json (3 entries)
+- agent:main:discord:direct:991912078023594044 (1354m ago)
+- agent:main:discord:dm:991912078023594044 (6494m ago)
+- agent:main:main (6509m ago)
+time="2026-03-01T06:55:56Z" level=warning msg="The \"CLAUDE_AI_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:56Z" level=warning msg="The \"CLAUDE_WEB_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:56Z" level=warning msg="The \"CLAUDE_WEB_COOKIE\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:56Z" level=warning msg="The \"CLAUDE_WEB_COOKIE\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:56Z" level=warning msg="The \"CLAUDE_AI_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T06:55:56Z" level=warning msg="The \"CLAUDE_WEB_SESSION_KEY\" variable is not set. Defaulting to a blank string."

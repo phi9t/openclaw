@@ -1,0 +1,51 @@
+# discord validation message
+timestamp=2026-03-01T07:00:47Z
+$ cargo run --manifest-path crates/clawyer/Cargo.toml -- -D /home/phi9t/workspace/openclaw run -- message send --channel discord --target user:991912078023594044 --message "OpenClaw Discord validation ping from rebuilt gateway at 2026-03-01T07:00:47Z" --json
+warning: function `get_config_dir` is never used
+  --> src/config.rs:27:8
+   |
+27 | pub fn get_config_dir(openclaw_dir: &Path) -> Result<PathBuf> {
+   |        ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `get_workspace_dir` is never used
+  --> src/config.rs:47:8
+   |
+47 | pub fn get_workspace_dir(openclaw_dir: &Path) -> Result<PathBuf> {
+   |        ^^^^^^^^^^^^^^^^^
+
+warning: function `trim_quotes` is never used
+ --> src/token.rs:4:12
+  |
+4 |     pub fn trim_quotes(token: &str) -> String {
+  |            ^^^^^^^^^^^
+
+warning: function `is_valid` is never used
+ --> src/token.rs:9:12
+  |
+9 |     pub fn is_valid(token: &str) -> bool {
+  |            ^^^^^^^^
+
+warning: `clawyer` (bin "clawyer") generated 4 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.66s
+     Running `crates/clawyer/target/debug/clawyer -D /home/phi9t/workspace/openclaw run -- message send --channel discord --target 'user:991912078023594044' --message 'OpenClaw Discord validation ping from rebuilt gateway at 2026-03-01T07:00:47Z' --json`
+time="2026-03-01T07:00:48Z" level=warning msg="The \"CLAUDE_AI_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T07:00:48Z" level=warning msg="The \"CLAUDE_WEB_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T07:00:48Z" level=warning msg="The \"CLAUDE_WEB_COOKIE\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T07:00:48Z" level=warning msg="The \"CLAUDE_AI_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T07:00:48Z" level=warning msg="The \"CLAUDE_WEB_SESSION_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-03-01T07:00:48Z" level=warning msg="The \"CLAUDE_WEB_COOKIE\" variable is not set. Defaulting to a blank string."
+{
+  "action": "send",
+  "channel": "discord",
+  "dryRun": false,
+  "handledBy": "plugin",
+  "payload": {
+    "ok": true,
+    "result": {
+      "messageId": "1477561333942714448",
+      "channelId": "1473762929357881488"
+    }
+  }
+}

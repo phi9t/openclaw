@@ -1,0 +1,39 @@
+name: openclaw-verify-29577-2639618
+services:
+  openclaw-gateway:
+    command:
+      - node
+      - dist/index.js
+      - gateway
+      - --allow-unconfigured
+      - --bind
+      - loopback
+      - --port
+      - "18789"
+    environment:
+      HOME: /home/node
+      OPENCLAW_GATEWAY_TOKEN: verify-token
+      TERM: xterm-256color
+    image: openclaw:local
+    init: true
+    network_mode: bridge
+    ports:
+      - mode: ingress
+        target: 18789
+        published: "0"
+        protocol: tcp
+      - mode: ingress
+        target: 18790
+        published: "0"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /tmp/tmp.eABD3IpeEM/config
+        target: /home/node/.openclaw
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /tmp/tmp.eABD3IpeEM/workspace
+        target: /home/node/.openclaw/workspace
+        bind:
+          create_host_path: true
