@@ -86,6 +86,20 @@
   `pkill -9 -f openclaw-gateway || true; nohup openclaw gateway run --bind loopback --port 18789 --force > /tmp/openclaw-gateway.log 2>&1 &`
 - Verify: `openclaw channels status --probe`, `ss -ltnp | rg 18789`, `tail -n 120 /tmp/openclaw-gateway.log`.
 
+## Docker Container Upgrade (engulfed)
+
+- **Always reset to a stable release tag before rebuilding** — never build from `origin/main`; `main` can contain unreleased commits that break production extensions (e.g. imports of `src/` paths not present in the Docker runtime image).
+  - Find latest stable tag: `git tag --sort=-version:refname | grep -E '^v[0-9]{4}\.[0-9]+\.[0-9]+$' | head -3`
+- **`clawyer rebuild` has a known cache-hit bug** — it silently returns "✅ Rebuilt image" even when all Docker layers are cache hits, leaving the old image in place. Use `docker build` directly until this is fixed:
+  ```
+  docker build -t openclaw:engulfed -f Dockerfile .
+  ```
+- **`clawyer restart` does not swap the image** — always force-recreate after rebuilding:
+  ```
+  docker compose up -d --force-recreate openclaw-gateway
+  ```
+- See `memory/upgrade.md` for full sequence and health check signals.
+
 ## Build, Test, and Development Commands
 
 - Runtime baseline: Node **22+** (keep Node + Bun paths working).
