@@ -221,6 +221,38 @@ RUN --mount=type=cache,id=openclaw-bookworm-apt-cache,target=/var/cache/apt,shar
         docker-ce-cli docker-compose-plugin; \
     fi
 
+# Bake in the AI CLIs OpenClaw can target directly inside the container:
+# - Codex CLI (`codex`)
+# - Claude Code CLI (`claude`)
+# - Gemini CLI (`gemini`)
+# - Cursor CLI (`cursor-agent`)
+# - OpenCode CLI (`opencode`)
+RUN set -eux; \
+    npm install -g @openai/codex @anthropic-ai/claude-code @google/gemini-cli; \
+    curl -fsSL https://cursor.com/install | bash; \
+    if [ -d /root/.local/share/cursor-agent/versions ]; then \
+      cp -a /root/.local/share/cursor-agent /usr/local/share/; \
+      version_dir="$(find /usr/local/share/cursor-agent/versions -mindepth 1 -maxdepth 1 -type d | sort | tail -n 1)"; \
+      ln -sf "$version_dir/cursor-agent" /usr/local/bin/cursor-agent; \
+    fi; \
+    OPENCODE_INSTALL_DIR=/usr/local/bin curl -fsSL https://opencode.ai/install | bash; \
+    if [ -x /root/.local/bin/opencode ]; then \
+      rm -f /usr/local/bin/opencode; \
+      cp -fL /root/.local/bin/opencode /usr/local/bin/opencode; \
+      chmod 755 /usr/local/bin/opencode; \
+    elif [ -x /root/.opencode/bin/opencode ]; then \
+      rm -f /usr/local/bin/opencode; \
+      cp -fL /root/.opencode/bin/opencode /usr/local/bin/opencode; \
+      chmod 755 /usr/local/bin/opencode; \
+    fi; \
+    command -v codex; \
+    command -v claude; \
+    command -v gemini; \
+    command -v cursor-agent; \
+    command -v opencode
+
+ENV CODEX_HOME=/home/node/.codex
+
 # Expose the CLI binary without requiring npm global writes as non-root.
 RUN ln -sf /app/openclaw.mjs /usr/local/bin/openclaw \
  && chmod 755 /app/openclaw.mjs

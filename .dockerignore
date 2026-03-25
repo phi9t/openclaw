@@ -1,16 +1,18 @@
-.git
-.worktrees
+/.git
+.git/
+/.worktrees
+.worktrees/
 
 # Sensitive files – docker-setup.sh writes .env with OPENCLAW_GATEWAY_TOKEN
 # into the project root; keep it out of the build context.
-.env
-.env.*
+/.env
+/.env.*
 
-.bun-cache
-.bun
-.tmp
+/.bun-cache
+/.bun
+/.tmp
 **/.tmp
-.DS_Store
+/.DS_Store
 **/.DS_Store
 *.png
 *.jpg
@@ -22,24 +24,50 @@
 *.wav
 *.mp3
 node_modules
+node_modules/
 **/node_modules
+**/node_modules/
+/node_modules
+/node_modules/
+
+target
+target/
+**/target
+**/target/
+/target
+/target/
+
 .pnpm-store
+.pnpm-store/
 **/.pnpm-store
+**/.pnpm-store/
 .turbo
+.turbo/
 **/.turbo
+**/.turbo/
 .cache
+.cache/
 **/.cache
+**/.cache/
 .next
+.next/
 **/.next
+**/.next/
 coverage
+coverage/
 **/coverage
+**/coverage/
 *.log
 tmp
+tmp/
 **/tmp
+**/tmp/
 
 # build artifacts
 dist
+dist/
 **/dist
+**/dist/
 apps/macos/.build
 apps/ios/build
 **/*.trace

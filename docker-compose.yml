@@ -3,9 +3,20 @@ services:
     image: ${OPENCLAW_IMAGE:-openclaw:local}
     environment:
       HOME: /home/node
+      CODEX_HOME: /home/node/.codex
       TERM: xterm-256color
       OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-}
+      OPENCLAW_GATEWAY_REMOTE_TOKEN: ${OPENCLAW_GATEWAY_REMOTE_TOKEN:-}
+      OPENCLAW_GATEWAY_URL: ${OPENCLAW_GATEWAY_URL:-}
       OPENCLAW_ALLOW_INSECURE_PRIVATE_WS: ${OPENCLAW_ALLOW_INSECURE_PRIVATE_WS:-}
+      OPENCLAW_DISCORD_DEFAULT_TOKEN: ${OPENCLAW_DISCORD_DEFAULT_TOKEN:-}
+      OPENCLAW_DISCORD_WORK_TOKEN: ${OPENCLAW_DISCORD_WORK_TOKEN:-}
+      OPENCLAW_NOTION_API_KEY: ${OPENCLAW_NOTION_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      OPENCODE_API_KEY: ${OPENCODE_API_KEY:-}
+      OPENCODE_ZEN_API_KEY: ${OPENCODE_ZEN_API_KEY:-}
+      CURSOR_API_KEY: ${CURSOR_API_KEY:-}
       CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY:-}
       CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY:-}
       CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE:-}
@@ -13,6 +24,12 @@ services:
     volumes:
       - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
       - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
+      - ${HOME}/.codex:/home/node/.codex
+      - ${HOME}/.claude:/home/node/.claude
+      - ${HOME}/.claude.json:/home/node/.claude.json
+      - ${HOME}/.gemini:/home/node/.gemini
+      - ${HOME}/.opencode:/home/node/.opencode
+      - ${HOME}/.cursor:/home/node/.cursor
       ## Uncomment the lines below to enable sandbox isolation
       ## (agents.defaults.sandbox). Requires Docker CLI in the image
       ## (build with --build-arg OPENCLAW_INSTALL_DOCKER_CLI=1) or use
@@ -59,9 +76,20 @@ services:
       - no-new-privileges:true
     environment:
       HOME: /home/node
+      CODEX_HOME: /home/node/.codex
       TERM: xterm-256color
       OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-}
+      OPENCLAW_GATEWAY_REMOTE_TOKEN: ${OPENCLAW_GATEWAY_REMOTE_TOKEN:-}
+      OPENCLAW_GATEWAY_URL: ${OPENCLAW_GATEWAY_URL:-}
       OPENCLAW_ALLOW_INSECURE_PRIVATE_WS: ${OPENCLAW_ALLOW_INSECURE_PRIVATE_WS:-}
+      OPENCLAW_DISCORD_DEFAULT_TOKEN: ${OPENCLAW_DISCORD_DEFAULT_TOKEN:-}
+      OPENCLAW_DISCORD_WORK_TOKEN: ${OPENCLAW_DISCORD_WORK_TOKEN:-}
+      OPENCLAW_NOTION_API_KEY: ${OPENCLAW_NOTION_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      OPENCODE_API_KEY: ${OPENCODE_API_KEY:-}
+      OPENCODE_ZEN_API_KEY: ${OPENCODE_ZEN_API_KEY:-}
+      CURSOR_API_KEY: ${CURSOR_API_KEY:-}
       BROWSER: echo
       CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY:-}
       CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY:-}
@@ -70,6 +98,12 @@ services:
     volumes:
       - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
       - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
+      - ${HOME}/.codex:/home/node/.codex
+      - ${HOME}/.claude:/home/node/.claude
+      - ${HOME}/.claude.json:/home/node/.claude.json
+      - ${HOME}/.gemini:/home/node/.gemini
+      - ${HOME}/.opencode:/home/node/.opencode
+      - ${HOME}/.cursor:/home/node/.cursor
     stdin_open: true
     tty: true
     init: true
