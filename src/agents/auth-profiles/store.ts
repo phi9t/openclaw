@@ -5,7 +5,12 @@ import { withFileLock } from "../../infra/file-lock.js";
 import { loadJsonFile, saveJsonFile } from "../../infra/json-file.js";
 import { AUTH_STORE_LOCK_OPTIONS, AUTH_STORE_VERSION, log } from "./constants.js";
 import { syncExternalCliCredentials } from "./external-cli-sync.js";
-import { ensureAuthStoreFile, resolveAuthStorePath, resolveLegacyAuthStorePath } from "./paths.js";
+import {
+  ensureAuthStoreFile,
+  resolveAuthStorePath,
+  resolveLegacyAuthStorePath,
+  resolveMainAuthStorePath,
+} from "./paths.js";
 import type { AuthProfileCredential, AuthProfileStore, ProfileUsageStats } from "./types.js";
 
 type LegacyAuthStore = Record<string, AuthProfileCredential>;
@@ -390,7 +395,7 @@ function loadAuthProfileStoreForAgent(
 
   // Fallback: inherit auth-profiles from main agent if subagent has none
   if (agentDir && !readOnly) {
-    const mainAuthPath = resolveAuthStorePath(); // without agentDir = main
+    const mainAuthPath = resolveMainAuthStorePath();
     const mainRaw = loadJsonFile(mainAuthPath);
     const mainStore = coerceAuthStore(mainRaw);
     if (mainStore && Object.keys(mainStore.profiles).length > 0) {
@@ -446,7 +451,7 @@ export function loadAuthProfileStoreForRuntime(
 ): AuthProfileStore {
   const store = loadAuthProfileStoreForAgent(agentDir, options);
   const authPath = resolveAuthStorePath(agentDir);
-  const mainAuthPath = resolveAuthStorePath();
+  const mainAuthPath = resolveMainAuthStorePath();
   if (!agentDir || authPath === mainAuthPath) {
     return store;
   }
@@ -470,7 +475,7 @@ export function ensureAuthProfileStore(
 
   const store = loadAuthProfileStoreForAgent(agentDir, options);
   const authPath = resolveAuthStorePath(agentDir);
-  const mainAuthPath = resolveAuthStorePath();
+  const mainAuthPath = resolveMainAuthStorePath();
   if (!agentDir || authPath === mainAuthPath) {
     return store;
   }

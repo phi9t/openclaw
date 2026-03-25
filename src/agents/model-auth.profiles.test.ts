@@ -167,6 +167,67 @@ describe("getApiKeyForModel", () => {
     }
   });
 
+  it("inherits API key profiles from the main agent when OPENCLAW_AGENT_DIR points at a work agent", async () => {
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-auth-main-fallback-"));
+
+    try {
+      const mainAgentDir = path.join(tempDir, "agents", "main", "agent");
+      const workAgentDir = path.join(tempDir, "agents", "work", "agent");
+      await fs.mkdir(mainAgentDir, { recursive: true });
+      await fs.mkdir(workAgentDir, { recursive: true });
+      await fs.writeFile(
+        path.join(mainAgentDir, "auth-profiles.json"),
+        `${JSON.stringify(
+          {
+            version: 1,
+            profiles: {
+              "anthropic:default": {
+                type: "api_key",
+                provider: "anthropic",
+                key: "main-anthropic-key",
+              },
+            },
+          },
+          null,
+          2,
+        )}\n`,
+        "utf8",
+      );
+
+      await withEnvAsync(
+        {
+          ANTHROPIC_API_KEY: undefined,
+          OPENCLAW_STATE_DIR: tempDir,
+          OPENCLAW_AGENT_DIR: workAgentDir,
+          PI_CODING_AGENT_DIR: workAgentDir,
+        },
+        async () => {
+          const resolved = await resolveApiKeyForProvider({
+            provider: "anthropic",
+            agentDir: workAgentDir,
+          });
+          expect(resolved.apiKey).toBe("main-anthropic-key");
+          expect(resolved.profileId).toBe("anthropic:default");
+
+          const copied = JSON.parse(
+            await fs.readFile(path.join(workAgentDir, "auth-profiles.json"), "utf8"),
+          ) as Record<string, unknown>;
+          expect(copied).toMatchObject({
+            profiles: {
+              "anthropic:default": {
+                type: "api_key",
+                provider: "anthropic",
+                key: "main-anthropic-key",
+              },
+            },
+          });
+        },
+      );
+    } finally {
+      await fs.rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
   it("throws when ZAI API key is missing", async () => {
     await withEnvAsync(
       {

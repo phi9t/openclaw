@@ -808,6 +808,7 @@ async function executeGatewayRequestWithScopes<T>(params: {
   return await new Promise<T>((resolve, reject) => {
     let settled = false;
     let ignoreClose = false;
+    let requestIssued = false;
     const stop = (err?: Error, value?: T) => {
       if (settled) {
         return;
@@ -846,6 +847,7 @@ async function executeGatewayRequestWithScopes<T>(params: {
             methods: hello.features?.methods,
             attemptedMethod: opts.method,
           });
+          requestIssued = true;
           const result = await client.request<T>(opts.method, opts.params, {
             expectFinal: opts.expectFinal,
             timeoutMs: opts.timeoutMs,
@@ -861,6 +863,14 @@ async function executeGatewayRequestWithScopes<T>(params: {
       },
       onClose: (code, reason) => {
         if (settled || ignoreClose) {
+          return;
+        }
+        // An expectFinal request can receive its final response and then get a clean socket close
+        // before the awaiting continuation runs. Once the final response is consumed there are no
+        // pending requests left, so let the already-resolved request path finish instead of
+        // surfacing a spurious transport error.
+        if (requestIssued && !client.hasPendingRequests()) {
+          ignoreClose = true;
           return;
         }
         ignoreClose = true;

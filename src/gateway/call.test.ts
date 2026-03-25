@@ -24,7 +24,11 @@ let lastRequestOptions: {
   opts?: { expectFinal?: boolean; timeoutMs?: number | null };
 } | null = null;
 type StartMode = "hello" | "close" | "silent";
+type RequestMode = "resolve" | "resolveThenClose" | "pending" | "pendingThenClose";
 let startMode: StartMode = "hello";
+let requestMode: RequestMode = "resolve";
+let requestResult: unknown = { ok: true };
+let pendingRequestCount = 0;
 let closeCode = 1006;
 let closeReason = "";
 let helloMethods: string[] | undefined = ["health", "secrets.resolve"];
@@ -56,7 +60,23 @@ vi.mock("./client.js", () => ({
       opts?: { expectFinal?: boolean; timeoutMs?: number | null },
     ) {
       lastRequestOptions = { method, params, opts };
-      return { ok: true };
+      if (requestMode === "pending") {
+        pendingRequestCount = 1;
+        return await new Promise(() => {});
+      }
+      if (requestMode === "pendingThenClose") {
+        pendingRequestCount = 1;
+        queueMicrotask(() => lastClientOptions?.onClose?.(1000, ""));
+        return await new Promise(() => {});
+      }
+      pendingRequestCount = 0;
+      if (requestMode === "resolveThenClose") {
+        queueMicrotask(() => lastClientOptions?.onClose?.(1000, ""));
+      }
+      return requestResult;
+    }
+    hasPendingRequests() {
+      return pendingRequestCount > 0;
     }
     start() {
       if (startMode === "hello") {
@@ -84,6 +104,9 @@ function resetGatewayCallMocks() {
   lastClientOptions = null;
   lastRequestOptions = null;
   startMode = "hello";
+  requestMode = "resolve";
+  requestResult = { ok: true };
+  pendingRequestCount = 0;
   closeCode = 1006;
   closeReason = "";
   helloMethods = ["health", "secrets.resolve"];
@@ -602,6 +625,34 @@ describe("callGateway error details", () => {
     expect(lastRequestOptions?.method).toBe("health");
     expect(lastRequestOptions?.opts?.expectFinal).toBe(true);
     expect(lastRequestOptions?.opts?.timeoutMs).toBeUndefined();
+  });
+
+  it("treats a clean close after the final response as success for expectFinal requests", async () => {
+    setLocalLoopbackGatewayConfig();
+    requestMode = "resolveThenClose";
+    requestResult = {
+      status: "ok",
+      result: { text: "ok" },
+    };
+
+    await expect(callGateway({ method: "agent", expectFinal: true })).resolves.toMatchObject({
+      status: "ok",
+      result: { text: "ok" },
+    });
+  });
+
+  it("still fails when an expectFinal request is still pending and the gateway closes", async () => {
+    setLocalLoopbackGatewayConfig();
+    requestMode = "pendingThenClose";
+
+    let errMessage = "";
+    const promise = callGateway({ method: "agent", expectFinal: true }).catch((caught) => {
+      errMessage = caught instanceof Error ? caught.message : String(caught);
+    });
+
+    await promise;
+
+    expect(errMessage).toContain("gateway closed (1000");
   });
 
   it("fails fast when remote mode is missing remote url", async () => {

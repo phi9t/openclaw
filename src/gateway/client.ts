@@ -707,6 +707,10 @@ export class GatewayClient {
     return null;
   }
 
+  hasPendingRequests(): boolean {
+    return this.pending.size > 0;
+  }
+
   async request<T = Record<string, unknown>>(
     method: string,
     params?: unknown,

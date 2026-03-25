@@ -1,3 +1,4 @@
+import path from "node:path";
 import {
   getOAuthApiKey,
   getOAuthProviders,
@@ -14,7 +15,7 @@ import { normalizeProviderId } from "../model-selection.js";
 import { AUTH_STORE_LOCK_OPTIONS, log } from "./constants.js";
 import { resolveTokenExpiryState } from "./credential-state.js";
 import { formatAuthDoctorHint } from "./doctor.js";
-import { ensureAuthStoreFile, resolveAuthStorePath } from "./paths.js";
+import { ensureAuthStoreFile, resolveAuthStorePath, resolveMainAuthStorePath } from "./paths.js";
 import { suggestOAuthProfileIdForLegacyDefault } from "./repair.js";
 import { ensureAuthProfileStore, saveAuthProfileStore } from "./store.js";
 import type { AuthProfileStore } from "./types.js";
@@ -118,6 +119,10 @@ type ResolveApiKeyForProfileParams = {
 
 type SecretDefaults = NonNullable<OpenClawConfig["secrets"]>["defaults"];
 
+function ensureMainAuthProfileStore(): AuthProfileStore {
+  return ensureAuthProfileStore(path.dirname(resolveMainAuthStorePath()));
+}
+
 function adoptNewerMainOAuthCredential(params: {
   store: AuthProfileStore;
   profileId: string;
@@ -128,7 +133,7 @@ function adoptNewerMainOAuthCredential(params: {
     return null;
   }
   try {
-    const mainStore = ensureAuthProfileStore(undefined);
+    const mainStore = ensureMainAuthProfileStore();
     const mainCred = mainStore.profiles[params.profileId];
     if (
       mainCred?.type === "oauth" &&
@@ -434,7 +439,7 @@ export async function resolveApiKeyForProfile(
     // Fallback: if this is a secondary agent, try using the main agent's credentials
     if (params.agentDir) {
       try {
-        const mainStore = ensureAuthProfileStore(undefined); // main agent (no agentDir)
+        const mainStore = ensureMainAuthProfileStore();
         const mainCred = mainStore.profiles[profileId];
         if (mainCred?.type === "oauth" && Date.now() < mainCred.expires) {
           // Main agent has fresh credentials - copy them to this agent and use them
